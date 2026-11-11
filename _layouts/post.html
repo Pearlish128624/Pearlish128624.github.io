@@ -14,7 +14,7 @@
 </div>
 <article class="post">
   <header class="posthead">
-    <span class="pix meta"><span>{{ page.date | date: "%Y.%m.%d" }}</span><span aria-hidden="true">·</span><span>約 {{ mins }} 分鐘</span>{% if page.category %}<span aria-hidden="true">·</span><span class="cat">{{ page.category }}</span>{% endif %}</span>
+    <span class="pix meta"><span>{{ page.date | date: "%Y.%m.%d" }}</span><span aria-hidden="true">·</span><span>約 {{ mins }} 分鐘</span>{% if page.category %}<span aria-hidden="true">·</span><a class="cat" href="{{ '/posts/' | relative_url }}?cat={{ page.category | url_encode }}">{{ page.category }}</a>{% endif %}</span>
     <h1>{{ page.title }}</h1>
     {% if page.summary %}<p class="lede">{{ page.summary }}</p>{% endif %}
     <svg class="px sprig" width="72" height="24" viewBox="0 0 24 8" aria-hidden="true"><rect x="0" y="4" width="24" height="1" fill="#c9bfa4"></rect><rect x="11" y="1" width="1" height="6" fill="#4a8a4a"></rect><rect x="9" y="2" width="2" height="1" fill="#6fae5a"></rect><rect x="12" y="1" width="2" height="1" fill="#6fae5a"></rect><rect x="9" y="5" width="2" height="1" fill="#4a8a4a"></rect><rect x="12" y="4" width="2" height="1" fill="#6fae5a"></rect><rect x="10" y="0" width="3" height="1" fill="#e58aa6"></rect></svg>

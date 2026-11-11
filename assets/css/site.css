@@ -99,3 +99,11 @@ a{color:var(--green)} a:hover{color:var(--green-dk)}
   .pagetitle{font-size:32px} .posthead h1{font-size:30px}
   .prose p,.prose ul,.prose ol{font-size:17px}
 }
+.catfilter{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px}
+.chip{min-height:36px;padding:6px 14px;border:1.5px solid var(--green);border-radius:999px;background:transparent;color:var(--green);font-family:'DotGothic16','Noto Sans TC',monospace;font-size:14px;cursor:pointer}
+.chip:hover{background:rgba(47,93,74,.1)}
+.chip.on{background:var(--green);color:#fff}
+.chip:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.entry[hidden],.year[hidden]{display:none}
+.emptynote{color:var(--muted);font-size:15px}
+.posthead a.cat{text-decoration:none} .posthead a.cat:hover{text-decoration:underline}

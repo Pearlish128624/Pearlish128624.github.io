@@ -5,7 +5,14 @@ permalink: /posts/
 banner: true
 ---
 {%- assign wd = "日,一,二,三,四,五,六" | split: "," -%}
-<p class="lede">{{ site.posts_intro }}<span class="pix count">共 {{ site.posts | size }} 篇</span></p>
+<p class="lede">{{ site.posts_intro }}<span class="pix count" id="postcount">共 {{ site.posts | size }} 篇</span></p>
+{%- assign cats = site.posts | map: "category" | compact | uniq | sort -%}
+{% if cats.size > 0 %}
+<div class="catfilter" role="group" aria-label="依分類篩選">
+  <button type="button" class="chip on" data-cat="" aria-pressed="true">全部</button>
+  {% for c in cats %}<button type="button" class="chip" data-cat="{{ c | escape }}" aria-pressed="false">{{ c }}</button>{% endfor %}
+</div>
+{% endif %}
 {%- assign years = site.posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
 {% for y in years %}
 <section class="year" aria-labelledby="y{{ y.name }}">
@@ -13,7 +20,7 @@ banner: true
   {% for post in y.items %}
   {%- assign w = post.date | date: "%w" | plus: 0 -%}
   {%- assign mins = post.content | strip_html | strip_newlines | size | divided_by: 400 | plus: 1 -%}
-  <a class="entry" href="{{ post.url | relative_url }}">
+  <a class="entry" data-cat="{{ post.category | escape }}" href="{{ post.url | relative_url }}">
     <span class="pix edate"><span class="md">{{ post.date | date: "%m.%d" }}</span><span class="wk">星期{{ wd[w] }}</span></span>
     <span class="ebody">
       <span class="etitle">{{ post.title }}</span>
@@ -25,3 +32,25 @@ banner: true
   {% endfor %}
 </section>
 {% endfor %}
+<p class="emptynote" id="emptynote" hidden>這個分類還沒有文章。</p>
+<script>
+(function(){
+  var chips=document.querySelectorAll('.catfilter .chip');
+  if(!chips.length) return;
+  var entries=document.querySelectorAll('.entry'), years=document.querySelectorAll('.year');
+  var count=document.getElementById('postcount'), empty=document.getElementById('emptynote');
+  function apply(cat, push){
+    var known=false;
+    chips.forEach(function(c){ var on=c.dataset.cat===cat; if(on) known=true; c.classList.toggle('on',on); c.setAttribute('aria-pressed',on); });
+    if(!known){ cat=''; chips[0].classList.add('on'); chips[0].setAttribute('aria-pressed','true'); }
+    var n=0;
+    entries.forEach(function(e){ var show=!cat||e.dataset.cat===cat; e.hidden=!show; if(show) n++; });
+    years.forEach(function(y){ y.hidden=!y.querySelector('.entry:not([hidden])'); });
+    count.textContent='共 '+n+' 篇';
+    empty.hidden=n>0;
+    if(push){ var u=new URL(location.href); if(cat) u.searchParams.set('cat',cat); else u.searchParams.delete('cat'); history.replaceState(null,'',u); }
+  }
+  chips.forEach(function(c){ c.addEventListener('click',function(){ apply(c.dataset.cat,true); }); });
+  apply(new URLSearchParams(location.search).get('cat')||'',false);
+})();
+</script>
