@@ -1,0 +1,18 @@
+# 核心書單：由上到下就是顯示順序；首頁那本書只會顯示前三本
+- title: 圖書館戰爭
+  author: 有川浩
+  category: 最愛的系列
+  note: "[為什麼喜歡這個系列]"
+  color: "#3f6f9e"
+
+- title: 飢餓遊戲
+  author: 蘇珊・柯林斯
+  category: 反烏托邦
+  note: "[讀後的一句話]"
+  color: "#3b3b3b"
+
+- title: "[書名]"
+  author: "[作者]"
+  category: "[分類]"
+  note: "[一句話]"
+  color: "#8c4f7a"

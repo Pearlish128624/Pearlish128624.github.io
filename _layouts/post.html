@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+{% include head.html %}
+</head>
+<body class="paper reading">
+{%- assign mins = content | strip_html | strip_newlines | size | divided_by: 400 | plus: 1 -%}
+<div class="readbar">
+  <div class="readbar-in">
+    <a class="navlink" href="{{ '/posts/' | relative_url }}">← 所有文章</a>
+    <a class="navlink" href="{{ '/' | relative_url }}">回到溫室</a>
+  </div>
+  <div class="progress" aria-hidden="true"><div id="progress"></div></div>
+</div>
+<article class="post">
+  <header class="posthead">
+    <span class="pix meta"><span>{{ page.date | date: "%Y.%m.%d" }}</span><span aria-hidden="true">·</span><span>約 {{ mins }} 分鐘</span>{% if page.category %}<span aria-hidden="true">·</span><span class="cat">{{ page.category }}</span>{% endif %}</span>
+    <h1>{{ page.title }}</h1>
+    {% if page.summary %}<p class="lede">{{ page.summary }}</p>{% endif %}
+    <svg class="px sprig" width="72" height="24" viewBox="0 0 24 8" aria-hidden="true"><rect x="0" y="4" width="24" height="1" fill="#c9bfa4"></rect><rect x="11" y="1" width="1" height="6" fill="#4a8a4a"></rect><rect x="9" y="2" width="2" height="1" fill="#6fae5a"></rect><rect x="12" y="1" width="2" height="1" fill="#6fae5a"></rect><rect x="9" y="5" width="2" height="1" fill="#4a8a4a"></rect><rect x="12" y="4" width="2" height="1" fill="#6fae5a"></rect><rect x="10" y="0" width="3" height="1" fill="#e58aa6"></rect></svg>
+  </header>
+  <div class="prose">
+    {{ content }}
+  </div>
+  {% include cat.html text="完" %}
+  <nav class="nearby" aria-label="其他文章">
+    {% if page.previous %}<a class="near" href="{{ page.previous.url | relative_url }}"><span class="pix">← 較舊的文章</span><span class="ntitle">{{ page.previous.title }}</span></a>{% else %}<span></span>{% endif %}
+    {% if page.next %}<a class="near right" href="{{ page.next.url | relative_url }}"><span class="pix">較新的文章 →</span><span class="ntitle">{{ page.next.title }}</span></a>{% endif %}
+  </nav>
+</article>
+<script>
+  (function () {
+    var bar = document.getElementById('progress');
+    function upd() { var h = document.documentElement, max = h.scrollHeight - h.clientHeight; bar.style.width = (max > 0 ? h.scrollTop / max * 100 : 0) + '%'; }
+    window.addEventListener('scroll', upd, { passive: true }); upd();
+  })();
+</script>
+</body>
+</html>

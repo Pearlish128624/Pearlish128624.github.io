@@ -1,0 +1,8 @@
+<header class="topnav">
+  <a class="navlink" href="{{ '/' | relative_url }}">← 回到溫室</a>
+  <nav aria-label="分頁">
+    <a class="navlink{% if page.url == '/about/' %} on{% endif %}" href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>關於我</a>
+    <a class="navlink{% if page.url == '/books/' %} on{% endif %}" href="{{ '/books/' | relative_url }}"{% if page.url == '/books/' %} aria-current="page"{% endif %}>核心書單</a>
+    <a class="navlink{% if page.url == '/posts/' %} on{% endif %}" href="{{ '/posts/' | relative_url }}"{% if page.url == '/posts/' %} aria-current="page"{% endif %}>近期文章</a>
+  </nav>
+</header>

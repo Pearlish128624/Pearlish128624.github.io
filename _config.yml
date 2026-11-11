@@ -1,0 +1,29 @@
+# 網站基本資料
+title: Sunnine 的溫室圖書館
+description: 在玻璃屋裡看書、寫字，讓想法慢慢長大。
+lang: zh-Hant
+timezone: Asia/Taipei
+
+# 首頁書本裡的短句
+books_intro: "[一句話：這些書對我的意義]"
+posts_intro: "[一句話：我在這裡寫些什麼]"
+
+# 若 repo 名稱是 <帳號>.github.io，baseurl 留空；
+# 若是其他名稱（例如 greenhouse），改成 "/greenhouse"
+baseurl: ""
+url: ""
+
+permalink: /posts/:title/
+markdown: kramdown
+kramdown:
+  input: GFM
+
+exclude:
+  - README.md
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post

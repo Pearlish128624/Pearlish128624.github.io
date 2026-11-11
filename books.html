@@ -1,0 +1,19 @@
+---
+layout: page
+title: 核心書單
+permalink: /books/
+---
+<p class="lede">{{ site.books_intro }}</p>
+<ol class="booklist">
+  {% for b in site.data.books %}
+  <li class="bookrow">
+    <span class="pix num">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+    <svg class="px" width="24" height="30" viewBox="0 0 8 10" aria-hidden="true"><rect x="1" y="0" width="7" height="10" fill="{{ b.color | default: '#3f6f9e' }}"></rect><rect x="0" y="0" width="1" height="10" fill="#1f3329" opacity=".45"></rect><rect x="1" y="3" width="7" height="1" fill="#f2c84b"></rect><rect x="7" y="1" width="1" height="8" fill="#f4efe1"></rect></svg>
+    <span class="bookinfo">
+      <span class="booktitle">{{ b.title }}</span>
+      <span class="bookmeta">{{ b.author }}<span class="tag">{{ b.category }}</span></span>
+      {% if b.note %}<span class="booknote">{{ b.note }}</span>{% endif %}
+    </span>
+  </li>
+  {% endfor %}
+</ol>
