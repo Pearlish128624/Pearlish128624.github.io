@@ -25,6 +25,9 @@ a{color:#2f5d4a}a:hover{color:#1d3d30}
 .page{position:absolute;left:50%;top:0;width:50%;height:100%;box-sizing:border-box;background:#f7f0dc;border:4px solid #1f3329;border-left-width:2px;box-shadow:8px 8px 0 #1f3329;padding:26px 24px;display:flex;flex-direction:column;gap:12px;background-image:repeating-linear-gradient(0deg,transparent 0 27px,#e8dec3 27px 29px)}
 .leftpage{background:#f7f0dc;border:4px solid #1f3329;border-right-width:2px;padding:26px 24px;display:flex;flex-direction:column;gap:10px}
 .pagelink{display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:700;text-decoration:none;color:#2f5d4a}
+.credit{margin:0;font-size:13px;line-height:1.8;color:#4a5d53}
+.credit a{color:#2f5d4a;font-weight:700}
+.credit a:hover{color:#1d3d30}
 .pagelink:hover{color:#1d3d30;text-decoration:underline}
 .pill{display:flex;gap:2px;padding:4px;border-radius:999px;background:rgba(18,22,28,0.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 2px 10px rgba(0,0,0,0.18)}
 .wx{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;cursor:pointer;border-radius:50%;border:0;background:transparent;opacity:.72;transition:background .15s,opacity .15s}
@@ -44,7 +47,7 @@ html,body{height:100%;overscroll-behavior:none}
 
       <div id="gh-dim" aria-hidden="true" style="position: absolute; inset: 0; background: #101a15; opacity: 0; pointer-events: none; z-index: 3"></div>
 
-      <section class="book" id="gh-aboutWrap" aria-label="關於我">
+      <section class="book" id="gh-aboutWrap" aria-label="關於圖書館">
         <div id="gh-aboutInner" style="position: absolute; inset: 0">
           <div class="page" id="gh-aboutPage">
             {% for line in about.book_text %}<p style="margin: 0; font-size: 15px; line-height: 1.95; color: #34493f">{{ line }}</p>{% endfor %}
@@ -54,11 +57,11 @@ html,body{height:100%;overscroll-behavior:none}
           <div class="cover" id="gh-aboutCover">
             <div class="face" style="background: #2f5d4a; border: 4px solid #1f3329; box-shadow: inset 10px 0 0 rgba(0,0,0,0.22)">
               <div style="position: absolute; left: 14%; right: 14%; top: 28%; height: 10px; background: #f2c84b"></div>
-              <div class="pix" style="position: absolute; left: 10%; right: 10%; top: 38%; color: #fffdf6; font-size: 26px; text-align: center">關於我</div>
+              <div class="pix" style="position: absolute; left: 10%; right: 10%; top: 38%; color: #fffdf6; font-size: 26px; text-align: center">關於圖書館</div>
               <div style="position: absolute; left: 14%; right: 14%; bottom: 18%; height: 4px; background: #f2c84b"></div>
             </div>
             <div class="face face-back leftpage">
-              <span class="pix" style="font-size: 14px; color: #4a5d53">關於我</span>
+              <span class="pix" style="font-size: 14px; color: #4a5d53">About me</span>
               <span style="font-size: 26px; font-weight: 700; line-height: 1.4">{{ about.greeting }}</span>
               <span style="flex: 1"></span>
               <svg class="px" width="88" height="64" viewBox="0 0 22 16" aria-hidden="true">
@@ -71,16 +74,17 @@ html,body{height:100%;overscroll-behavior:none}
                 <rect x="12" y="6" width="2" height="1" fill="#4a4a4a"></rect>
                 <rect x="10" y="8" width="1" height="2" fill="#d23a3a"></rect>
               </svg>
+              {% if about.book_credit %}<p class="credit">{{ about.book_credit | markdownify | remove: '<p>' | remove: '</p>' | replace: '<a href=', '<a target="_blank" rel="noopener" href=' | strip }}</p>{% endif %}
             </div>
           </div>
         </div>
       </section>
 
-      <section class="book" id="gh-booksWrap" aria-label="核心書單">
+      <section class="book" id="gh-booksWrap" aria-label="推薦書單">
         <div id="gh-booksInner" style="position: absolute; inset: 0">
           <div class="page" id="gh-booksPage">
             <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px">
-              {% for b in site.data.books limit: 3 %}<li style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">{{ b.title }}</span><span style="font-size: 13px; color: #4a5d53">{{ b.author }} · {{ b.category }}</span></li>{% endfor %}
+              {% for b in site.data.books limit: 3 %}<li style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">{{ b.title }}</span><span style="font-size: 13px; color: #4a5d53">{{ b.author }}</span></li>{% endfor %}
             </ol>
             <span style="flex: 1"></span>
             <a class="pagelink" href="{{ '/books/' | relative_url }}">完整書單 →</a>
@@ -88,12 +92,11 @@ html,body{height:100%;overscroll-behavior:none}
           <div class="cover" id="gh-booksCover">
             <div class="face" style="background: #3f6f9e; border: 4px solid #1f3329; box-shadow: inset 10px 0 0 rgba(0,0,0,0.22)">
               <div style="position: absolute; left: 14%; right: 14%; top: 28%; height: 10px; background: #f2c84b"></div>
-              <div class="pix" style="position: absolute; left: 10%; right: 10%; top: 38%; color: #fffdf6; font-size: 26px; text-align: center">核心書單</div>
+              <div class="pix" style="position: absolute; left: 10%; right: 10%; top: 38%; color: #fffdf6; font-size: 26px; text-align: center">推薦書單</div>
               <div style="position: absolute; left: 14%; right: 14%; bottom: 18%; height: 4px; background: #f2c84b"></div>
             </div>
             <div class="face face-back leftpage">
-              <span class="pix" style="font-size: 14px; color: #4a5d53">Reading list</span>
-              <span style="font-size: 26px; font-weight: 700; line-height: 1.4">核心書單</span>
+              <span style="font-size: 26px; font-weight: 700; line-height: 1.4">Reading List</span>
               <span style="font-size: 15px; line-height: 1.8; color: #34493f">{{ site.books_intro }}</span>
               <span style="flex: 1"></span>
               <svg class="px" width="72" height="56" viewBox="0 0 18 14" aria-hidden="true">
@@ -126,8 +129,7 @@ html,body{height:100%;overscroll-behavior:none}
               <div style="position: absolute; left: 14%; right: 14%; bottom: 18%; height: 4px; background: #f2c84b"></div>
             </div>
             <div class="face face-back leftpage">
-              <span class="pix" style="font-size: 14px; color: #4a5d53">Notes &amp; essays</span>
-              <span style="font-size: 26px; font-weight: 700; line-height: 1.4">近期文章</span>
+              <span style="font-size: 26px; font-weight: 700; line-height: 1.4">Notes &amp; article</span>
               <span style="font-size: 15px; line-height: 1.8; color: #34493f">{{ site.posts_intro }}</span>
               <span style="flex: 1"></span>
               <svg class="px" width="72" height="56" viewBox="0 0 18 14" aria-hidden="true">

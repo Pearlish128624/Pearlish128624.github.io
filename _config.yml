@@ -1,12 +1,12 @@
 # 網站基本資料
-title: Sunnine 的溫室圖書館
+title: Pearlish. 
 description: 在玻璃屋裡看書、寫字，讓想法慢慢長大。
 lang: zh-Hant
 timezone: Asia/Taipei
 
 # 首頁書本裡的短句
-books_intro: "[一句話：這些書對我的意義]"
-posts_intro: "[一句話：我在這裡寫些什麼]"
+books_intro: "[對我影響巨大的書籍清單，希望也有人喜歡]"
+posts_intro: "[我的思想與文字紀錄，可能只是不成熟的碎片]"
 
 # 若 repo 名稱是 <帳號>.github.io，baseurl 留空；
 # 若是其他名稱（例如 greenhouse），改成 "/greenhouse"
@@ -20,6 +20,9 @@ kramdown:
 
 exclude:
   - README.md
+  - Gemfile
+  - Gemfile.lock
+  - preview.cmd
 
 defaults:
   - scope:
