@@ -32,6 +32,7 @@ banner: true
   {% endfor %}
 </section>
 {% endfor %}
+{% if site.posts.size == 0 %}<p class="emptynote">第一篇文章還在發芽中。</p>{% endif %}
 <p class="emptynote" id="emptynote" hidden>這個分類還沒有文章。</p>
 <script>
 (function(){
