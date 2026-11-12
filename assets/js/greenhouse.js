@@ -36,6 +36,8 @@ class Greenhouse {
     if (season !== 'none' && !ocean) {
       const mx = (a, b, k) => '#' + [0, 1, 2].map((q) => Math.round(parseInt(a.slice(1 + q * 2, 3 + q * 2), 16) * (1 - k) + parseInt(b.slice(1 + q * 2, 3 + q * 2), 16) * k).toString(16).padStart(2, '0')).join('');
       const adj = (c) => time === 'night' ? mx(c, '#16202e', 0.62) : time === 'afternoon' ? mx(c, '#b8607a', 0.22) : c;
+      if (season === 'sakura') { e.grove = { spread: 46, lean: 14, P: [['#9a3a62', '#d26a92', '#f29ab8', '#ffd0e0'], ['#a8496e', '#e07ea2', '#f7b0c8', '#ffe4ee'], ['#a86a84', '#e2a2b8', '#f8cad8', '#fff2f6']].map((p4) => p4.map(adj)), bark: ['#2e1c20', '#4e3434'].map(adj), trees: [[28, [0, 1], -72, 66, 9], [176, [1, 2], -96, 58, 8], [318, [0, 2], -84, 64, 9], [462, [1, 0], -108, 58, 8]] }; }
+      if (season === 'maple') { e.grove = { spread: 34, lean: 6, P: [['#4a0810', '#9a1018', '#d8201a', '#f6522a'], ['#5a0c0c', '#b01a10', '#e8401a', '#ff7a30'], ['#6a2006', '#c0440a', '#f07414', '#ffaa36'], ['#5a3806', '#b0700a', '#eaaa14', '#fcd84a']].map((p4) => p4.map(adj)), bark: ['#1e120e', '#3a2418'].map(adj), trees: [[30, [0, 1, 1], -78, 70, 9], [188, [3, 3, 2], -94, 62, 8], [330, [2, 1, 3], -86, 66, 9], [458, [0, 1, 2], -102, 60, 8]] }; }
       if (season === 'sakura') { e.treePals = [['#f2b8c8', '#fbdbe5', '#d98aa3'], ['#f5c4d2', '#fde4ec', '#de95ad'], ['#eeaac0', '#f9d0dd', '#cf7f98']].map((p3) => p3.map(adj)); e.ground = ['#f7c6d4', '#fde4ec'].map(adj); Object.assign(e, { hill: adj('#9fcf7f'), hillD: adj('#86b86a'), hillFar: adj('#b7d6b0') }); }
       if (season === 'maple') { e.treePals = [['#d2462e', '#e8704a', '#9e2f22'], ['#e8862a', '#f4a84e', '#b8601c'], ['#e2b236', '#f2d05a', '#b08420'], ['#c0392b', '#de5a40', '#8a2a20']].map((p3) => p3.map(adj)); e.ground = ['#d2462e', '#e8862a', '#e2b236'].map(adj); Object.assign(e, { hill: adj('#b89a5a'), hillD: adj('#9e8148'), hillFar: adj('#c9b48a') }); }
       if (season === 'snow') {
@@ -177,7 +179,44 @@ class Greenhouse {
     const hn = (x) => Math.round(194 + 7 * Math.sin(x / 29 + 1) + 3 * Math.sin(x / 9));
     for (let x = 0; x < W; x++) { const top = hn(x); for (let y = top; y < H; y++) bk.set(x, y, (y === top || rnd() < 0.04) ? mixc(e.hillD, e.skyBot, 0.15) : mixc(e.hill, e.skyBot, 0.15)); }
     [[60, 7], [178, 9], [268, 6], [360, 8]].forEach(([tx, r], q) => tree(bk, tx, hn(tx) - 1, r, 0.3, q + 1));
-    if (e.ground) for (let i = 0; i < 420; i++) { const x = Math.floor(rnd() * W), y = hn(x) + 1 + Math.floor(rnd() * 10); bk.set(x, y, mixc(pick(e.ground), e.skyBot, 0.12)); }
+    if (e.grove && !ocean) {
+      // Trees pressed right up against the glass: a canopy that fills the window, sky only through the gaps.
+      const gv = e.grove; let gs = season === 'maple' ? 4021 : 9157;
+      const gr = () => (gs = gs * 16807 % 2147483647) / 2147483647;
+      const hsh = (x, y) => { let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263)) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+      // Foliage = many small round leaf clusters (jittered grid, nearest point wins), each lit from the upper left.
+      const CS = 5;
+      const blob = (cx, cy, r, P, dim) => {
+        for (let y = Math.floor(cy - r - CS); y <= cy + r + CS; y++) for (let x = Math.floor(cx - r - CS); x <= cx + r + CS; x++) {
+          const gi = Math.floor(x / CS), gj = Math.floor(y / CS);
+          let best = 1e9, ox = 0, oy = 0, pi = 0, pj = 0;
+          for (let j = gj - 1; j <= gj + 1; j++) for (let i = gi - 1; i <= gi + 1; i++) {
+            const qx = (i + hsh(i, j)) * CS, qy = (j + hsh(j + 911, i)) * CS, dd = (x - qx) ** 2 + (y - qy) ** 2;
+            if (dd < best) { best = dd; ox = x - qx; oy = y - qy; pi = qx; pj = qy; }
+          }
+          const dc = Math.sqrt((pi - cx) ** 2 + (pj - cy) ** 2 * 1.2) / r; if (dc > 1) continue;
+          const dm = Math.sqrt(best) / CS; if (dm > 0.95) continue;
+          const b = (-(pi - cx) * 0.5 - (pj - cy) * 0.85) / r * 0.75 + (-ox * 0.6 - oy * 0.8) / CS * 0.75 - (dm > 0.62 ? 0.55 : 0) + (hsh(pi | 0, pj | 0) - 0.5) * 0.5 - dc * 0.25 - dim;
+          bk.set(x, y, b > 0.55 ? P[3] : b > 0.12 ? P[2] : b > -0.38 ? P[1] : P[0]);
+        }
+      };
+      for (let i = 0; i < 46; i++) blob(gr() * W, 8 + gr() * 150, 14 + gr() * 14, gv.P[Math.floor(gr() * gv.P.length)], 0.55);
+      const clumps = [];
+      const limb = (x, y, ang, len, w, d, pals) => {
+        const a = ang * Math.PI / 180, ex = x + Math.cos(a) * len, ey = y + Math.sin(a) * len, n = Math.ceil(len), ph = gr() * 6;
+        for (let i = 0; i <= n; i++) {
+          const t = i / n, px = x + (ex - x) * t + Math.sin(t * 3 + ph) * w * 0.4, py = y + (ey - y) * t, ww = w * (1 - t * 0.3);
+          for (let oy = -Math.ceil(ww); oy <= ww; oy++) for (let ox = -Math.ceil(ww); ox <= ww; ox++) if (ox * ox + oy * oy <= ww * ww) bk.set(px + ox, py + oy, ox < -ww * 0.3 ? gv.bark[1] : gv.bark[0]);
+        }
+        if (d <= 2) clumps.push([ex, ey, (d === 0 ? 12 : 9) + gr() * 8, gv.P[pals[Math.floor(gr() * pals.length)]]]);
+        if (d === 0) return;
+        const kids = 2 + (gr() < 0.4 ? 1 : 0);
+        for (let k = 0; k < kids; k++) limb(ex, ey, ang + (k - (kids - 1) / 2) * (gv.spread + gr() * 16) + (gr() - 0.5) * 16 + (ang < -90 ? -gv.lean : gv.lean) * 0.5, len * (0.66 + gr() * 0.14), Math.max(0.6, w * 0.64), d - 1, pals);
+      };
+      gv.trees.forEach(([tx, pals, ang, len, w]) => limb(tx, 214, ang, len, w, 4, pals));
+      clumps.forEach(([cx, cy, r, P]) => blob(cx, cy, r, P, 0));
+    }
+    if (e.ground) for (let i = 0, gn = e.grove ? 1400 : 420; i < gn; i++) { const x = Math.floor(rnd() * W), y = hn(x) + 1 + Math.floor(rnd() * 10); bk.set(x, y, mixc(pick(e.ground), e.skyBot, 0.12)); }
     let sprites = null;
     if (ocean) {
       const OC = { morning: ['#5cc8de', '#0d4a6e', '#0a3550', '#12506a', '#1b6a7a'], afternoon: ['#7cc9c6', '#164c66', '#0e3a50', '#1a5468', '#2a6a72'], night: ['#123a5a', '#03101e', '#020b14', '#08202e', '#0c2a36'] }[time];
@@ -237,6 +276,9 @@ class Greenhouse {
       sprites = { whale: [whale(true), whale(false)], dolphin: [dolphin(true), dolphin(false)], fish: [fish('#f2d03a', null, '#e0b820'), fish('#f08a3a', '#ffffff', '#e06a2a'), fish('#3a6ad8', '#1a2a5a', '#f2d03a')] };
     }
     const back = bk.canvas();
+    // Reseed for the interior so plants/shelves/floor stay identical whatever the sky, weather or season
+    // (value = the stream position the default morning scene reached here, so that look is unchanged).
+    seed = 486504494;
 
     const m = buf();
     for (let y = 0; y < 240; y++) for (let x = 0; x < W; x++) m.blend(x, y, e.glass, e.glassO);
@@ -397,8 +439,8 @@ class Greenhouse {
     else for (let i = 0; i < 26; i++) drops.push({ x: 4 + rnd() * 470, y: 4 + rnd() * 200, dur: 3000 + rnd() * 4000, off: rnd(), len: 2, travel: 30 });
     if (rain && !ocean) for (let i = 0; i < 120; i++) drops.push({ x: rnd() * W, y: rnd() * 120, dur: 700 + rnd() * 600, off: rnd(), len: 6, travel: 110 });
     const parts = [];
-    if (!ocean && season !== 'none') { const n = season === 'snow' ? 150 : season === 'sakura' ? 70 : 45; for (let i = 0; i < n; i++) parts.push({ x: rnd() * W, y: rnd() * 290, sp: season === 'snow' ? 0.008 + rnd() * 0.012 : 0.01 + rnd() * 0.01, ph: rnd() * 6.28, amp: season === 'maple' ? 8 + rnd() * 10 : 4 + rnd() * 6, sz: rnd() < 0.3 ? 2 : 1, c: season === 'snow' ? '#ffffff' : season === 'sakura' ? (rnd() < 0.5 ? '#f7c6d4' : '#fde4ec') : pick(['#d2462e', '#e8862a', '#e2b236', '#c0392b']) }); }
-    return { parts, season, night: time === 'night', back, midA, midB, near, door, snake, motes, drops, e, grade: e.grade, beams, glowSrc, lamp, beamCol, sprites, ocean, haze: FX.haze, bloom: FX.bloom, tint: FX.tint, grain: FX.grain };
+    if (!ocean && season !== 'none') { const n = season === 'snow' ? 150 : season === 'sakura' ? 140 : 110; for (let i = 0; i < n; i++) parts.push({ x: rnd() * W, y: rnd() * 290, sp: season === 'snow' ? 0.008 + rnd() * 0.012 : 0.01 + rnd() * 0.01, ph: rnd() * 6.28, amp: season === 'maple' ? 8 + rnd() * 10 : 4 + rnd() * 6, sz: rnd() < 0.3 ? 2 : 1, c: season === 'snow' ? '#ffffff' : season === 'sakura' ? (rnd() < 0.5 ? '#f7c6d4' : '#fde4ec') : pick(['#d2462e', '#e8862a', '#e2b236', '#c0392b']) }); }
+    return { parts, season, night: time === 'night', back, midA, midB, near, door, snake, motes, drops, e, grade: e.grade, beams, glowSrc, lamp, beamCol, sprites, ocean, haze: e.grove && !ocean ? Math.min(FX.haze, 0.04) : FX.haze, bloom: FX.bloom, tint: FX.tint, grain: FX.grain };
   }
 
   frame(now) {
