@@ -1,5 +1,5 @@
 <header class="topnav">
-  <a class="navlink" href="{{ '/' | relative_url }}">← 回到溫室</a>
+  <span class="topleft"><a class="brand" href="{{ '/' | relative_url }}" title="回到溫室">{{ site.title }}</a></span>
   <nav aria-label="分頁">
     <a class="navlink{% if page.url == '/about/' %} on{% endif %}" href="{{ '/about/' | relative_url }}"{% if page.url == '/about/' %} aria-current="page"{% endif %}>About me</a>
     <a class="navlink{% if page.url == '/books/' %} on{% endif %}" href="{{ '/books/' | relative_url }}"{% if page.url == '/books/' %} aria-current="page"{% endif %}>Reading List</a>

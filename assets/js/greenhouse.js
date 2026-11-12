@@ -5,7 +5,7 @@ class Greenhouse {
     this.p = 0;
     this.el = {};
     const mk = (k) => (node) => { this.el[k] = node; };
-    ['canvas', 'dim', 'aboutWrap', 'aboutInner', 'aboutCover', 'aboutPage', 'booksWrap', 'booksInner', 'booksCover', 'booksPage', 'postsWrap', 'postsInner', 'postsCover', 'postsPage'].forEach((k) => { this['r_' + k] = mk(k); });
+    ['canvas', 'dim', 'aboutWrap', 'aboutInner', 'aboutCover', 'aboutPage', 'booksWrap', 'booksInner', 'booksCover', 'booksPage', 'postsWrap', 'postsInner', 'postsCover', 'postsPage', 'signBooks', 'signPosts', 'dream', 'hint'].forEach((k) => { this['r_' + k] = mk(k); });
     this.onScroll = (e) => { const t = e.currentTarget; const max = t.scrollHeight - t.clientHeight; this.p = max > 0 ? t.scrollTop / max : 0; };
     this.loop = (now) => { this.frame(now); this.raf = requestAnimationFrame(this.loop); };
   }
@@ -530,6 +530,13 @@ class Greenhouse {
       { k: 'books', s: 0.41, e: 0.55, x: 113, y: 196 },
       { k: 'posts', s: 0.64, e: 0.8, x: 363, y: 196 }
     ];
+    // Opening view: shelf signs, the cat's dream bubble and the scroll hint live on the scene and fade once you scroll.
+    const near = 1 - sm(0.03, 0.1, p);
+    // keep each sign on screen: on narrow phones the shelves sit off-canvas, so the sign waits at the edge
+    const place = (el, x, y) => { const hw = el.offsetWidth / 2 + 12, sx = Math.min(vw - hw, Math.max(hw, XM.ox + x * XM.sc)); el.style.transform = 'translate(' + sx.toFixed(1) + 'px, ' + (XM.oy + y * XM.sc).toFixed(1) + 'px) translate(-50%, -100%)'; };
+    [['signBooks', 113, 140], ['signPosts', 363, 140]].forEach(([k, x, y]) => { const el = E[k]; if (!el) return; place(el, x, y); el.style.opacity = near.toFixed(3); el.style.visibility = near > 0.01 ? 'visible' : 'hidden'; });
+    if (E.dream) { place(E.dream, 252, 203); E.dream.classList.toggle('on', pose === 'sleep' && near > 0.5); }
+    if (E.hint) { const ho = 1 - sm(0.002, 0.02, p); E.hint.style.opacity = ho.toFixed(3); E.hint.style.visibility = ho > 0.01 ? 'visible' : 'hidden'; }
     let dim = 0;
     books.forEach((b) => {
       const pull = sm(b.s, b.s + 0.03, p) * (1 - sm(b.e - 0.03, b.e, p));
@@ -680,10 +687,34 @@ class Greenhouse {
 
 (function () {
   const gh = new Greenhouse();
-  ['canvas', 'dim', 'aboutWrap', 'aboutInner', 'aboutCover', 'aboutPage', 'booksWrap', 'booksInner', 'booksCover', 'booksPage', 'postsWrap', 'postsInner', 'postsCover', 'postsPage'].forEach((k) => { gh.el[k] = document.getElementById('gh-' + k); });
+  ['canvas', 'dim', 'aboutWrap', 'aboutInner', 'aboutCover', 'aboutPage', 'booksWrap', 'booksInner', 'booksCover', 'booksPage', 'postsWrap', 'postsInner', 'postsCover', 'postsPage', 'signBooks', 'signPosts', 'dream', 'hint'].forEach((k) => { gh.el[k] = document.getElementById('gh-' + k); });
   const sc = document.getElementById('gh-scroll');
   sc.addEventListener('scroll', gh.onScroll, { passive: true });
   document.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => { const a = gh.actions()[b.dataset.act]; if (a) a(); }));
+  // Clicking a sign: freeze the current view as a still, cut underneath to just before that book
+  // leaves its shelf, then dissolve the still away while the book flies out and opens.
+  // The greenhouse light never goes dark and the scene in between is never scrubbed through.
+  const SPOT = { about: [0.185, 0.26], books: [0.405, 0.48], posts: [0.635, 0.71] };
+  const cv = gh.el.canvas;
+  let busy = false;
+  const go = async (k) => {
+    if (busy || !SPOT[k]) return; busy = true;
+    const max = sc.scrollHeight - sc.clientHeight, [from, to] = SPOT[k];
+    if (gh.reduce) { sc.scrollTop = to * max; busy = false; return; }
+    const still = document.createElement('canvas');
+    still.width = cv.width; still.height = cv.height; still.getContext('2d').drawImage(cv, 0, 0);
+    still.setAttribute('aria-hidden', 'true');
+    still.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;opacity:1;transition:opacity .7s ease';
+    cv.parentNode.insertBefore(still, gh.el.dim);
+    sc.style.overflowY = 'hidden';
+    sc.scrollTop = from * max;
+    requestAnimationFrame(() => requestAnimationFrame(() => { still.style.opacity = '0'; }));
+    setTimeout(() => still.remove(), 800);
+    const t0 = performance.now() + 150, dur = 1100, a0 = from * max, a1 = to * max;
+    await new Promise((done) => { const step = (now) => { const u = Math.max(0, Math.min(1, (now - t0) / dur)), e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2; sc.scrollTop = a0 + (a1 - a0) * e; if (u < 1) requestAnimationFrame(step); else done(); }; requestAnimationFrame(step); });
+    sc.style.overflowY = 'auto'; busy = false;
+  };
+  document.querySelectorAll('[data-goto]').forEach((b) => b.addEventListener('click', () => go(b.dataset.goto)));
   gh.updateUI();
   gh.componentDidMount();
 })();

@@ -127,3 +127,6 @@ body.paper{transition:background-color .3s}
 .tsw:focus-visible{outline:2px solid var(--green);outline-offset:1px}
 .readbar-r{display:inline-flex;align-items:center;gap:6px}
 .topnav{row-gap:10px}
+.topleft{display:inline-flex;align-items:center;gap:6px}
+.brand{font-family:'DotGothic16','Noto Sans TC',monospace;font-size:22px;color:var(--ink);text-decoration:none;padding:4px 8px 4px 0;margin-right:4px}
+.brand:hover{color:var(--green)}

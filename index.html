@@ -36,6 +36,25 @@ a{color:#2f5d4a}a:hover{color:#1d3d30}
 .wx:focus-visible{outline:2px solid #f4f6f8;outline-offset:1px}
 .wx:disabled{opacity:.25;cursor:default;background:transparent}
 
+/* opening-view navigation: shelf signs, the cat's dream bubble, scroll hint (all pixel type) */
+.pxbox{background:#f7f0dc;color:#1f3329;font-family:'DotGothic16',monospace;border:0;box-shadow:0 -3px 0 #1f3329,0 3px 0 #1f3329,-3px 0 0 #1f3329,3px 0 0 #1f3329,6px 6px 0 rgba(16,26,21,.35);cursor:pointer;white-space:nowrap}
+.pxbox:hover{background:#fffaf0}
+.pxbox:focus-visible{outline:2px solid #f2c84b;outline-offset:5px}
+.sign{position:absolute;left:0;top:0;z-index:5;padding:7px 14px;font-size:17px;visibility:hidden;will-change:transform}
+.sign::after{content:"";position:absolute;left:50%;bottom:-12px;width:3px;height:9px;margin-left:-1px;background:#1f3329}
+.dream{position:absolute;left:0;top:0;z-index:5;padding:8px 14px;font-size:16px;visibility:hidden;opacity:0;transition:opacity .6s,visibility 0s .6s}
+.dream.on{visibility:visible;opacity:1;transition:opacity .6s}
+.dream i{position:absolute;background:#f7f0dc;box-shadow:0 -3px 0 #1f3329,0 3px 0 #1f3329,-3px 0 0 #1f3329,3px 0 0 #1f3329}
+.dream i:nth-child(1){width:9px;height:9px;left:6px;bottom:-21px}
+.dream i:nth-child(2){width:5px;height:5px;left:-4px;bottom:-35px}
+.ghhint{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;font-family:'DotGothic16',monospace;font-size:16px;color:#f4f6f8;text-shadow:2px 2px 0 rgba(16,26,21,.7);display:flex;align-items:center;gap:8px;pointer-events:none}
+.ghbrand{position:absolute;top:22px;left:24px;z-index:6;font-family:'DotGothic16',monospace;font-size:24px;line-height:1;color:#f4f6f8;text-decoration:none;text-shadow:2px 2px 0 rgba(16,26,21,.65)}
+.ghbrand:hover{color:#fff}
+@media (max-width:760px){
+  .ghbrand{top:78px;left:16px;font-size:20px}
+  .sign{font-size:14px;padding:5px 10px}
+}
+
 html,body{height:100%;overscroll-behavior:none}
 </style>
 </head>
@@ -145,6 +164,12 @@ html,body{height:100%;overscroll-behavior:none}
         </div>
       </section>
 
+      <a class="ghbrand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <button type="button" class="pxbox sign" id="gh-signBooks" data-goto="books">推薦書單</button>
+      <button type="button" class="pxbox sign" id="gh-signPosts" data-goto="posts">近期文章</button>
+      <button type="button" class="pxbox dream" id="gh-dream" data-goto="about">關於圖書館<i></i><i></i></button>
+      <div class="ghhint" id="gh-hint" aria-hidden="true">下滑<svg class="px" width="12" height="9" viewBox="0 0 4 3"><rect x="0" y="0" width="4" height="1" fill="currentColor"/><rect x="1" y="1" width="2" height="1" fill="currentColor"/><rect x="1.5" y="2" width="1" height="1" fill="currentColor"/></svg></div>
+
       <div class="tray" style="position: absolute; top: 16px; right: 16px; z-index: 6; display: flex; gap: 8px; align-items: center">
         <div role="group" aria-label="時間與天氣" class="pill">
           <button type="button" class="wx" title="跟隨現在時間" aria-label="跟隨現在時間" data-wx="auto" aria-pressed="false" data-act="setAuto"><svg class="px" width="18" height="18" viewBox="0 0 9 9" aria-hidden="true"><rect x="2" y="0" width="5" height="1" fill="#f4f6f8"></rect><rect x="1" y="1" width="1" height="1" fill="#f4f6f8"></rect><rect x="7" y="1" width="1" height="1" fill="#f4f6f8"></rect><rect x="0" y="2" width="1" height="5" fill="#f4f6f8"></rect><rect x="8" y="2" width="1" height="5" fill="#f4f6f8"></rect><rect x="1" y="7" width="1" height="1" fill="#f4f6f8"></rect><rect x="7" y="7" width="1" height="1" fill="#f4f6f8"></rect><rect x="2" y="8" width="5" height="1" fill="#f4f6f8"></rect><rect x="4" y="2" width="1" height="3" fill="#f4f6f8"></rect><rect x="5" y="4" width="2" height="1" fill="#f4f6f8"></rect></svg></button>
@@ -173,6 +198,6 @@ html,body{height:100%;overscroll-behavior:none}
   </div>
 </div>
 
-<script src="{{ '/assets/js/greenhouse.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/greenhouse.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 </body>
 </html>
