@@ -4,7 +4,7 @@ media:
     label: 圖片
     input: assets/images/posts
     output: /assets/images/posts
-    rename: safe
+    rename: random
     categories: [image]
 
 content:
