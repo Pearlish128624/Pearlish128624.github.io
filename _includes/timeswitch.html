@@ -1,0 +1,24 @@
+<div class="timeswitch" role="group" aria-label="溫室的光線">
+  <button type="button" class="tsw" data-tsw="auto" title="跟隨現在時間" aria-label="跟隨現在時間" aria-pressed="false"><svg class="px" width="18" height="18" viewBox="0 0 9 9" aria-hidden="true"><rect x="2" y="0" width="5" height="1" fill="currentColor"></rect><rect x="1" y="1" width="1" height="1" fill="currentColor"></rect><rect x="7" y="1" width="1" height="1" fill="currentColor"></rect><rect x="0" y="2" width="1" height="5" fill="currentColor"></rect><rect x="8" y="2" width="1" height="5" fill="currentColor"></rect><rect x="1" y="7" width="1" height="1" fill="currentColor"></rect><rect x="7" y="7" width="1" height="1" fill="currentColor"></rect><rect x="2" y="8" width="5" height="1" fill="currentColor"></rect><rect x="4" y="2" width="1" height="3" fill="currentColor"></rect><rect x="5" y="4" width="2" height="1" fill="currentColor"></rect></svg></button>
+  <button type="button" class="tsw" data-tsw="morning" title="晨光" aria-label="晨光" aria-pressed="false"><svg class="px" width="18" height="18" viewBox="0 0 9 9" aria-hidden="true"><rect x="3" y="3" width="3" height="3" fill="currentColor"></rect><rect x="4" y="0" width="1" height="2" fill="currentColor"></rect><rect x="4" y="7" width="1" height="2" fill="currentColor"></rect><rect x="0" y="4" width="2" height="1" fill="currentColor"></rect><rect x="7" y="4" width="2" height="1" fill="currentColor"></rect><rect x="1" y="1" width="1" height="1" fill="currentColor"></rect><rect x="7" y="1" width="1" height="1" fill="currentColor"></rect><rect x="1" y="7" width="1" height="1" fill="currentColor"></rect><rect x="7" y="7" width="1" height="1" fill="currentColor"></rect></svg></button>
+  <button type="button" class="tsw" data-tsw="afternoon" title="夕陽" aria-label="夕陽" aria-pressed="false"><svg class="px" width="18" height="18" viewBox="0 0 9 9" aria-hidden="true"><rect x="3" y="4" width="3" height="1" fill="currentColor"></rect><rect x="2" y="5" width="5" height="2" fill="currentColor"></rect><rect x="4" y="1" width="1" height="2" fill="currentColor"></rect><rect x="1" y="3" width="1" height="1" fill="currentColor"></rect><rect x="7" y="3" width="1" height="1" fill="currentColor"></rect><rect x="0" y="7" width="9" height="1" fill="currentColor"></rect></svg></button>
+  <button type="button" class="tsw" data-tsw="night" title="夜晚" aria-label="夜晚" aria-pressed="false"><svg class="px" width="18" height="18" viewBox="0 0 9 9" aria-hidden="true"><rect x="3" y="1" width="3" height="1" fill="currentColor"></rect><rect x="2" y="2" width="2" height="1" fill="currentColor"></rect><rect x="1" y="3" width="2" height="3" fill="currentColor"></rect><rect x="2" y="6" width="2" height="1" fill="currentColor"></rect><rect x="3" y="7" width="3" height="1" fill="currentColor"></rect><rect x="6" y="6" width="1" height="1" fill="currentColor"></rect><rect x="7" y="2" width="1" height="1" fill="currentColor"></rect></svg></button>
+</div>
+<script>
+(function(){
+  /* Light switch for the reading pages. "auto" follows the visitor's clock (same hours as the greenhouse). */
+  var root=document.documentElement, KEY='greenhouse-time';
+  function clock(){var h=new Date().getHours();return h>=5&&h<16?'morning':h>=16&&h<19?'afternoon':'night';}
+  function mark(){var cur;try{cur=localStorage.getItem(KEY)}catch(e){}cur=(location.search.match(/[?&]time=(morning|afternoon|night)/)||[])[1]||cur||'auto';
+    document.querySelectorAll('.tsw').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.tsw===cur));});}
+  document.querySelectorAll('.tsw').forEach(function(b){
+    if(b.dataset.bound) return; b.dataset.bound='1';
+    b.addEventListener('click',function(){
+      var v=b.dataset.tsw;
+      try{ if(v==='auto') localStorage.removeItem(KEY); else localStorage.setItem(KEY,v); }catch(e){}
+      root.setAttribute('data-time', v==='auto'?clock():v); mark();
+    });
+  });
+  mark();
+})();
+</script>

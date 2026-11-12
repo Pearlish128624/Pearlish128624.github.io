@@ -8,7 +8,7 @@
 <div class="readbar">
   <div class="readbar-in">
     <a class="navlink" href="{{ '/posts/' | relative_url }}">← 所有文章</a>
-    <a class="navlink" href="{{ '/' | relative_url }}">回到溫室</a>
+    <span class="readbar-r">{% include timeswitch.html %}<a class="navlink" href="{{ '/' | relative_url }}">回到溫室</a></span>
   </div>
   <div class="progress" aria-hidden="true"><div id="progress"></div></div>
 </div>
@@ -17,12 +17,18 @@
     <span class="pix meta"><span>{{ page.date | date: "%Y.%m.%d" }}</span><span aria-hidden="true">·</span><span>約 {{ mins }} 分鐘</span>{% if page.category %}<span aria-hidden="true">·</span><a class="cat" href="{{ '/posts/' | relative_url }}?cat={{ page.category | url_encode }}">{{ page.category }}</a>{% endif %}</span>
     <h1>{{ page.title }}</h1>
     {% if page.summary %}<p class="lede">{{ page.summary }}</p>{% endif %}
-    <svg class="px sprig" width="72" height="24" viewBox="0 0 24 8" aria-hidden="true"><rect x="0" y="4" width="24" height="1" fill="#c9bfa4"></rect><rect x="11" y="1" width="1" height="6" fill="#4a8a4a"></rect><rect x="9" y="2" width="2" height="1" fill="#6fae5a"></rect><rect x="12" y="1" width="2" height="1" fill="#6fae5a"></rect><rect x="9" y="5" width="2" height="1" fill="#4a8a4a"></rect><rect x="12" y="4" width="2" height="1" fill="#6fae5a"></rect><rect x="10" y="0" width="3" height="1" fill="#e58aa6"></rect></svg>
+    {%- assign planted = page.date | date: "%s" | plus: 0 -%}
+    <svg class="px sprig" id="sprig" data-planted="{{ planted }}" width="72" height="30" viewBox="0 0 24 10" role="img" aria-label="這篇文章長出來的小芽">
+      <g data-stage="0" hidden><rect x="12" y="6" width="1" height="1" fill="#9fcf6e"/><rect x="10" y="7" width="2" height="1" fill="#6fae5a"/><rect x="13" y="7" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="8" width="1" height="1" fill="#4a8a4a"/><rect x="0" y="9" width="24" height="1" style="fill:var(--rule)"/></g>
+      <g data-stage="1" hidden><rect x="12" y="4" width="2" height="1" fill="#9fcf6e"/><rect x="10" y="5" width="2" height="1" fill="#6fae5a"/><rect x="13" y="5" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="6" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="7" width="1" height="1" fill="#4a8a4a"/><rect x="13" y="7" width="2" height="1" fill="#6fae5a"/><rect x="11" y="8" width="1" height="1" fill="#4a8a4a"/><rect x="0" y="9" width="24" height="1" style="fill:var(--rule)"/></g>
+      <g data-stage="2" hidden><rect x="11" y="1" width="1" height="1" fill="#e58aa6"/><rect x="11" y="2" width="1" height="1" fill="#4a8a4a"/><rect x="9" y="3" width="1" height="1" fill="#6fae5a"/><rect x="10" y="3" width="1" height="1" fill="#9fcf6e"/><rect x="11" y="3" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="4" width="1" height="1" fill="#4a8a4a"/><rect x="12" y="4" width="1" height="1" fill="#9fcf6e"/><rect x="13" y="4" width="1" height="1" fill="#6fae5a"/><rect x="9" y="5" width="2" height="1" fill="#6fae5a"/><rect x="12" y="5" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="6" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="7" width="1" height="1" fill="#4a8a4a"/><rect x="12" y="7" width="2" height="1" fill="#6fae5a"/><rect x="11" y="8" width="1" height="1" fill="#4a8a4a"/><rect x="0" y="9" width="24" height="1" style="fill:var(--rule)"/></g>
+      <g data-stage="3" hidden><rect x="10" y="0" width="3" height="1" fill="#e58aa6"/><rect x="9" y="1" width="1" height="1" fill="#e58aa6"/><rect x="10" y="1" width="1" height="1" fill="#f4b9c8"/><rect x="11" y="1" width="1" height="1" fill="#f2c84b"/><rect x="12" y="1" width="1" height="1" fill="#f4b9c8"/><rect x="13" y="1" width="1" height="1" fill="#e58aa6"/><rect x="10" y="2" width="3" height="1" fill="#e58aa6"/><rect x="9" y="3" width="1" height="1" fill="#6fae5a"/><rect x="10" y="3" width="1" height="1" fill="#9fcf6e"/><rect x="11" y="3" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="4" width="1" height="1" fill="#4a8a4a"/><rect x="12" y="4" width="1" height="1" fill="#9fcf6e"/><rect x="13" y="4" width="1" height="1" fill="#6fae5a"/><rect x="9" y="5" width="2" height="1" fill="#6fae5a"/><rect x="12" y="5" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="6" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="7" width="1" height="1" fill="#4a8a4a"/><rect x="12" y="7" width="2" height="1" fill="#6fae5a"/><rect x="11" y="8" width="1" height="1" fill="#4a8a4a"/><rect x="0" y="9" width="24" height="1" style="fill:var(--rule)"/></g>
+      <g data-stage="4" hidden><rect x="10" y="0" width="3" height="1" fill="#e58aa6"/><rect x="6" y="1" width="1" height="1" fill="#e58aa6"/><rect x="9" y="1" width="1" height="1" fill="#e58aa6"/><rect x="10" y="1" width="1" height="1" fill="#f4b9c8"/><rect x="11" y="1" width="1" height="1" fill="#f2c84b"/><rect x="12" y="1" width="1" height="1" fill="#f4b9c8"/><rect x="13" y="1" width="1" height="1" fill="#e58aa6"/><rect x="5" y="2" width="1" height="1" fill="#f4b9c8"/><rect x="6" y="2" width="1" height="1" fill="#f2c84b"/><rect x="7" y="2" width="1" height="1" fill="#f4b9c8"/><rect x="10" y="2" width="3" height="1" fill="#e58aa6"/><rect x="17" y="2" width="1" height="1" fill="#e58aa6"/><rect x="6" y="3" width="1" height="1" fill="#e58aa6"/><rect x="7" y="3" width="1" height="1" fill="#4a8a4a"/><rect x="10" y="3" width="1" height="1" fill="#6fae5a"/><rect x="11" y="3" width="1" height="1" fill="#9fcf6e"/><rect x="12" y="3" width="1" height="1" fill="#4a8a4a"/><rect x="16" y="3" width="1" height="1" fill="#f4b9c8"/><rect x="17" y="3" width="1" height="1" fill="#f2c84b"/><rect x="18" y="3" width="1" height="1" fill="#f4b9c8"/><rect x="7" y="4" width="1" height="1" fill="#4a8a4a"/><rect x="8" y="4" width="1" height="1" fill="#9fcf6e"/><rect x="12" y="4" width="1" height="1" fill="#4a8a4a"/><rect x="13" y="4" width="1" height="1" fill="#9fcf6e"/><rect x="14" y="4" width="1" height="1" fill="#6fae5a"/><rect x="17" y="4" width="1" height="1" fill="#e58aa6"/><rect x="6" y="5" width="2" height="1" fill="#6fae5a"/><rect x="9" y="5" width="2" height="1" fill="#6fae5a"/><rect x="12" y="5" width="1" height="1" fill="#4a8a4a"/><rect x="16" y="5" width="1" height="1" fill="#4a8a4a"/><rect x="17" y="5" width="1" height="1" fill="#6fae5a"/><rect x="10" y="6" width="1" height="1" fill="#6fae5a"/><rect x="11" y="6" width="1" height="1" fill="#4a8a4a"/><rect x="15" y="6" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="7" width="1" height="1" fill="#4a8a4a"/><rect x="12" y="7" width="2" height="1" fill="#6fae5a"/><rect x="14" y="7" width="1" height="1" fill="#4a8a4a"/><rect x="11" y="8" width="1" height="1" fill="#4a8a4a"/><rect x="0" y="9" width="24" height="1" style="fill:var(--rule)"/></g>
+    </svg>
   </header>
   <div class="prose">
     {{ content }}
   </div>
-  {% include cat.html text="完" %}
   <nav class="nearby" aria-label="其他文章">
     {% if page.previous %}<a class="near" href="{{ page.previous.url | relative_url }}"><span class="pix">← 較舊的文章</span><span class="ntitle">{{ page.previous.title }}</span></a>{% else %}<span></span>{% endif %}
     {% if page.next %}<a class="near right" href="{{ page.next.url | relative_url }}"><span class="pix">較新的文章 →</span><span class="ntitle">{{ page.next.title }}</span></a>{% endif %}
@@ -30,6 +36,15 @@
 </article>
 <script>
   (function () {
+    /* The sprout grows with the post's age: 1 week, 1 month, 3 months, 1 year. */
+    var sp = document.getElementById('sprig');
+    if (sp) {
+      var days = Math.max(0, Math.floor((Date.now() / 1000 - (+sp.dataset.planted)) / 86400));
+      var st = days < 7 ? 0 : days < 30 ? 1 : days < 90 ? 2 : days < 365 ? 3 : 4;
+      var g = sp.querySelector('[data-stage="' + st + '"]'); if (g) g.removeAttribute('hidden');
+      sp.setAttribute('aria-label', '這篇文章種下 ' + days + ' 天了'); 
+      var t = document.createElementNS('http://www.w3.org/2000/svg', 'title'); t.textContent = '種下第 ' + days + ' 天'; sp.prepend(t);
+    }
     var bar = document.getElementById('progress');
     function upd() { var h = document.documentElement, max = h.scrollHeight - h.clientHeight; bar.style.width = (max > 0 ? h.scrollTop / max * 100 : 0) + '%'; }
     window.addEventListener('scroll', upd, { passive: true }); upd();

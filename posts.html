@@ -27,7 +27,7 @@ banner: true
       {% if post.summary %}<span class="esum">{{ post.summary }}</span>{% endif %}
       <span class="pix emeta">{% if post.category %}<span class="tag">{{ post.category }}</span>{% endif %}<span>約 {{ mins }} 分鐘</span></span>
     </span>
-    <svg class="px arrow" width="20" height="20" viewBox="0 0 5 5" aria-hidden="true"><rect x="0" y="2" width="5" height="1" fill="#2f5d4a"></rect><rect x="3" y="1" width="1" height="1" fill="#2f5d4a"></rect><rect x="3" y="3" width="1" height="1" fill="#2f5d4a"></rect></svg>
+    <svg class="px arrow" style="color:var(--green)" width="20" height="20" viewBox="0 0 5 5" aria-hidden="true"><rect x="0" y="2" width="5" height="1" fill="currentColor"></rect><rect x="3" y="1" width="1" height="1" fill="currentColor"></rect><rect x="3" y="3" width="1" height="1" fill="currentColor"></rect></svg>
   </a>
   {% endfor %}
 </section>

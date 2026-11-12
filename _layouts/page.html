@@ -7,23 +7,17 @@
 {% include nav.html %}
 <main class="wrap">
   {% if page.banner %}
-  <svg class="px banner" viewBox="0 0 96 18" role="img" aria-label="像素插畫：從溫室玻璃窗看出去的天空與垂掛的植物">
-    <rect x="0" y="0" width="96" height="18" fill="#bfe1ee"></rect><rect x="0" y="12" width="96" height="6" fill="#a9cdb8"></rect>
-    <rect x="10" y="10" width="7" height="3" fill="#8fbf7f"></rect><rect x="42" y="9" width="9" height="4" fill="#8fbf7f"></rect><rect x="74" y="10" width="8" height="3" fill="#8fbf7f"></rect>
-    <rect x="20" y="3" width="10" height="2" fill="#ffffff"></rect><rect x="23" y="2" width="5" height="1" fill="#ffffff"></rect><rect x="60" y="5" width="12" height="2" fill="#ffffff"></rect><rect x="63" y="4" width="6" height="1" fill="#ffffff"></rect>
-    <rect x="0" y="0" width="96" height="1" fill="#3d6457"></rect><rect x="0" y="16" width="96" height="2" fill="#3d6457"></rect>
-    <rect x="0" y="0" width="1" height="18" fill="#3d6457"></rect><rect x="24" y="0" width="1" height="18" fill="#3d6457"></rect><rect x="48" y="0" width="1" height="18" fill="#3d6457"></rect><rect x="72" y="0" width="1" height="18" fill="#3d6457"></rect><rect x="95" y="0" width="1" height="18" fill="#3d6457"></rect>
-    <rect x="12" y="1" width="1" height="3" fill="#5a4a3a"></rect><rect x="10" y="4" width="5" height="2" fill="#9a7a52"></rect><rect x="9" y="3" width="2" height="1" fill="#4a8a4a"></rect><rect x="13" y="3" width="3" height="1" fill="#6fae5a"></rect><rect x="10" y="6" width="1" height="4" fill="#4a8a4a"></rect><rect x="13" y="6" width="1" height="6" fill="#6fae5a"></rect>
-    <rect x="58" y="1" width="1" height="4" fill="#5a4a3a"></rect><rect x="56" y="5" width="5" height="2" fill="#9a7a52"></rect><rect x="55" y="4" width="3" height="1" fill="#6fae5a"></rect><rect x="59" y="4" width="2" height="1" fill="#4a8a4a"></rect><rect x="57" y="7" width="1" height="5" fill="#4a8a4a"></rect><rect x="60" y="7" width="1" height="3" fill="#6fae5a"></rect>
-    <rect x="84" y="1" width="1" height="2" fill="#5a4a3a"></rect><rect x="82" y="3" width="5" height="2" fill="#9a7a52"></rect><rect x="82" y="2" width="2" height="1" fill="#6fae5a"></rect><rect x="85" y="2" width="2" height="1" fill="#4a8a4a"></rect><rect x="83" y="5" width="1" height="7" fill="#6fae5a"></rect>
-    <rect x="36" y="13" width="5" height="3" fill="#151515"></rect><rect x="40" y="12" width="2" height="2" fill="#151515"></rect><rect x="40" y="11" width="1" height="1" fill="#151515"></rect><rect x="35" y="15" width="1" height="1" fill="#151515"></rect>
-  </svg>
+  <div class="banner" role="img" aria-label="像素插畫：從溫室玻璃窗看出去的天空、山丘與垂掛的植物">
+    {%- assign times = "morning,afternoon,night" | split: "," -%}
+    {%- for t in times %}
+    <img class="px" data-t="{{ t }}" src="{{ '/assets/images/banner-' | append: t | append: '.png' | relative_url }}" width="256" height="48" alt="">
+    {%- endfor %}
+  </div>
   {% endif %}
   <h1 class="pagetitle">{{ page.title }}</h1>
   <div class="pagebody{% if page.name contains '.md' %} prose{% endif %}">
     {{ content }}
   </div>
-  {% include cat.html %}
 </main>
 </body>
 </html>

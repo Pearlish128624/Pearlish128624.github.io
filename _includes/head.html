@@ -1,4 +1,8 @@
 <meta charset="utf-8">
+<script>
+  /* Same clock as the greenhouse on the homepage: 5–16 morning, 16–19 afternoon, otherwise night. */
+  (function(){var h=new Date().getHours(),t=h>=5&&h<16?'morning':h>=16&&h<19?'afternoon':'night',s,q=(location.search.match(/[?&]time=(morning|afternoon|night)/)||[])[1];s=null;try{s=localStorage.getItem('greenhouse-time')}catch(e){}document.documentElement.setAttribute('data-time',q||s||t);})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
 <meta name="description" content="{{ page.summary | default: site.description }}">
