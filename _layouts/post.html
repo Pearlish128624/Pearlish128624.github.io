@@ -34,6 +34,7 @@
     {% if page.next %}<a class="near right" href="{{ page.next.url | relative_url }}"><span class="pix">較新的文章 →</span><span class="ntitle">{{ page.next.title }}</span></a>{% endif %}
   </nav>
 </article>
+{% include extlinks.html %}
 <script>
   (function () {
     /* The sprout grows with the post's age: 1 week, 1 month, 3 months, 1 year. */

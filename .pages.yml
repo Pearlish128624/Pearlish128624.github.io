@@ -1,0 +1,58 @@
+# Pages CMS (https://pagescms.org): write Notes posts in the browser or on a phone.
+media:
+  - name: images
+    label: 圖片
+    input: assets/images/posts
+    output: /assets/images/posts
+    rename: safe
+    categories: [image]
+
+content:
+  - name: posts
+    label: 文章
+    type: collection
+    path: _posts
+    format: yaml-frontmatter
+    filename:
+      template: "{year}-{month}-{day}-{fields.slug}.md"
+      field: create
+    view:
+      primary: title
+      fields: [title, date, published]
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: 標題
+        type: string
+        required: true
+      - name: slug
+        label: 網址名稱（英文小寫、數字、連字號，例如 my-first-note）
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9]+(-[a-z0-9]+)*$"
+          message: 只能用英文小寫、數字和連字號
+      - name: date
+        label: 日期
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: summary
+        label: 一句話摘要（顯示在文章列表）
+        type: string
+      - name: category
+        label: 分類
+        type: string
+      - name: published
+        label: 公開（關閉 = 草稿，不會出現在網站上）
+        type: boolean
+        default: false
+      - name: body
+        label: 內文
+        type: rich-text
+        options:
+          format: markdown
+          media: images
