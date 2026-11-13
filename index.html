@@ -50,9 +50,29 @@ a{color:#2f5d4a}a:hover{color:#1d3d30}
 .ghhint{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;font-family:'DotGothic16',monospace;font-size:16px;color:#f4f6f8;text-shadow:2px 2px 0 rgba(16,26,21,.7);display:flex;align-items:center;gap:8px;pointer-events:none}
 .ghbrand{position:absolute;top:22px;left:24px;z-index:6;font-family:'DotGothic16',monospace;font-size:24px;line-height:1;color:#f4f6f8;text-decoration:none;text-shadow:2px 2px 0 rgba(16,26,21,.65)}
 .ghbrand:hover{color:#fff}
+.traytoggle{display:none}
 @media (max-width:760px){
-  .ghbrand{top:78px;left:16px;font-size:20px}
+  .ghbrand{top:24px;left:16px;font-size:20px}
   .sign{font-size:14px;padding:5px 10px}
+  /* phone: the control pills fold away behind one button and open as a wrapped panel */
+  .tray{left:16px;top:12px!important;right:12px!important;flex-wrap:wrap;justify-content:flex-end}
+  .traytoggle{display:inline-flex}
+  .tray .pill:not(.traytoggle){display:none}
+  .tray.open .pill{display:flex}
+  .tray .wx{width:40px;height:40px}
+  /* phone: no opening book. The two pages stack into one note card that rises from the shelf. */
+  .book{width:min(86vw,360px);aspect-ratio:auto;max-height:80dvh;perspective:none}
+  .book>div{position:relative!important;transform:none!important;display:flex;flex-direction:column;box-shadow:8px 8px 0 #1f3329}
+  .book .cover{position:relative;left:0;width:100%;height:auto;transform:none!important;order:0}
+  .book .cover>.face:not(.face-back){display:none}
+  .book .face-back{position:relative;inset:auto;transform:none;border-right-width:4px;border-bottom:0;padding:22px 22px 10px!important;gap:8px!important}
+  .book .page{position:relative;left:0;width:100%;height:auto;opacity:1!important;order:1;box-shadow:none;border-left-width:4px;border-top:2px dashed #b9b09a;padding:16px 22px 12px!important;gap:10px!important;background-image:none}
+  .book span[style*="flex: 1"]{display:none}
+  .book span[style*="font-size: 26px"]{font-size:22px!important;line-height:1.35!important}
+  .book .face-back svg{display:none}
+  .book p{font-size:14.5px!important;line-height:1.85!important}
+  .book .credit{font-size:12.5px!important;line-height:1.7!important}
+  .pagelink{font-size:15px;min-height:44px}
 }
 
 html,body{height:100%;overscroll-behavior:none}
@@ -61,7 +81,7 @@ html,body{height:100%;overscroll-behavior:none}
 <body>
 <div id="gh-scroll" style="height: 100vh; height: 100dvh; overflow-y: auto; overflow-x: hidden; font-family: 'Noto Sans TC', system-ui, sans-serif; color: #1f3329; background: #1f3329">
   <div style="height: 820vh; position: relative">
-    <div style="position: sticky; top: 0; height: 100vh; overflow: hidden; background: #1f3329">
+    <div style="position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; background: #1f3329">
       <canvas id="gh-canvas" role="img" aria-label="從玻璃花房內部看出去的像素場景：玻璃天花板與玻璃牆，陽光從玻璃斜照進來，室內有兩座書架、吊盆、花台、閱讀椅和檯燈，一隻黑貓在走動" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block"></canvas>
 
       <div id="gh-dim" aria-hidden="true" style="position: absolute; inset: 0; background: #101a15; opacity: 0; pointer-events: none; z-index: 3"></div>
@@ -171,6 +191,7 @@ html,body{height:100%;overscroll-behavior:none}
       <div class="ghhint" id="gh-hint" aria-hidden="true">下滑<svg class="px" width="12" height="9" viewBox="0 0 4 3"><rect x="0" y="0" width="4" height="1" fill="currentColor"/><rect x="1" y="1" width="2" height="1" fill="currentColor"/><rect x="1.5" y="2" width="1" height="1" fill="currentColor"/></svg></div>
 
       <div class="tray" style="position: absolute; top: 16px; right: 16px; z-index: 6; display: flex; gap: 8px; align-items: center">
+        <div class="pill traytoggle"><button type="button" class="wx" id="gh-trayBtn" aria-expanded="false" aria-label="天氣與場景" title="天氣與場景"><svg class="px" width="18" height="18" viewBox="0 0 9 9" aria-hidden="true"><rect x="3" y="3" width="3" height="3" fill="#f4f6f8"></rect><rect x="4" y="0" width="1" height="2" fill="#f4f6f8"></rect><rect x="4" y="7" width="1" height="2" fill="#f4f6f8"></rect><rect x="0" y="4" width="2" height="1" fill="#f4f6f8"></rect><rect x="7" y="4" width="2" height="1" fill="#f4f6f8"></rect><rect x="1" y="1" width="1" height="1" fill="#f4f6f8"></rect><rect x="7" y="1" width="1" height="1" fill="#f4f6f8"></rect><rect x="1" y="7" width="1" height="1" fill="#f4f6f8"></rect><rect x="7" y="7" width="1" height="1" fill="#f4f6f8"></rect></svg></button></div>
         <div role="group" aria-label="時間與天氣" class="pill">
           <button type="button" class="wx" title="跟隨現在時間" aria-label="跟隨現在時間" data-wx="auto" aria-pressed="false" data-act="setAuto"><svg class="px" width="18" height="18" viewBox="0 0 9 9" aria-hidden="true"><rect x="2" y="0" width="5" height="1" fill="#f4f6f8"></rect><rect x="1" y="1" width="1" height="1" fill="#f4f6f8"></rect><rect x="7" y="1" width="1" height="1" fill="#f4f6f8"></rect><rect x="0" y="2" width="1" height="5" fill="#f4f6f8"></rect><rect x="8" y="2" width="1" height="5" fill="#f4f6f8"></rect><rect x="1" y="7" width="1" height="1" fill="#f4f6f8"></rect><rect x="7" y="7" width="1" height="1" fill="#f4f6f8"></rect><rect x="2" y="8" width="5" height="1" fill="#f4f6f8"></rect><rect x="4" y="2" width="1" height="3" fill="#f4f6f8"></rect><rect x="5" y="4" width="2" height="1" fill="#f4f6f8"></rect></svg></button>
           <button type="button" class="wx" title="晨光" aria-label="晨光" data-wx="morning" aria-pressed="false" data-act="setMorning"><svg class="px" width="18" height="18" viewBox="0 0 9 9" aria-hidden="true"><rect x="3" y="3" width="3" height="3" fill="#f4f6f8"></rect><rect x="4" y="0" width="1" height="2" fill="#f4f6f8"></rect><rect x="4" y="7" width="1" height="2" fill="#f4f6f8"></rect><rect x="0" y="4" width="2" height="1" fill="#f4f6f8"></rect><rect x="7" y="4" width="2" height="1" fill="#f4f6f8"></rect><rect x="1" y="1" width="1" height="1" fill="#f4f6f8"></rect><rect x="7" y="1" width="1" height="1" fill="#f4f6f8"></rect><rect x="1" y="7" width="1" height="1" fill="#f4f6f8"></rect><rect x="7" y="7" width="1" height="1" fill="#f4f6f8"></rect></svg></button>
@@ -199,5 +220,11 @@ html,body{height:100%;overscroll-behavior:none}
 </div>
 
 <script src="{{ '/assets/js/greenhouse.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script>
+  (function () {
+    var b = document.getElementById('gh-trayBtn'), t = b && b.closest('.tray');
+    if (b) b.addEventListener('click', function () { var o = t.classList.toggle('open'); b.setAttribute('aria-expanded', o); });
+  })();
+</script>
 </body>
 </html>
